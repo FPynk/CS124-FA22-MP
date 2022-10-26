@@ -10,6 +10,7 @@ import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
@@ -57,6 +58,9 @@ public final class MainActivity extends AppCompatActivity
   public static final double MAP_MIN_ZOOM = 12.0;
   public static final double MAP_DEFAULT_ZOOM = 17.0;
 
+  // Map default centre at alma mater
+  private static final IGeoPoint MAP_DEFAULT_CENTRE = new GeoPoint(40.10986682167534, -88.22831928981661);
+
   /*
    * onCreate is the first method called when this activity is created.
    * Code here normally does a variety of setup tasks, and functions somewhat similarly to a
@@ -95,6 +99,7 @@ public final class MainActivity extends AppCompatActivity
     // Set the current map zoom level to the default
     IMapController mapController = mapView.getController();
     mapController.setZoom(MAP_DEFAULT_ZOOM);
+    mapController.setCenter(MAP_DEFAULT_CENTRE);
   }
 
   /*
