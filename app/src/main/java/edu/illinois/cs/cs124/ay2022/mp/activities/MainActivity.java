@@ -75,7 +75,7 @@ public final class MainActivity extends AppCompatActivity
 
     // Load the layout for this activity and set the title
     setContentView(R.layout.activity_main);
-    setTitle("Favorite Place");
+    setTitle("Favorite Places");
 
     // Find the MapView component in the layout and configure it properly
     // Also save the reference for later use
