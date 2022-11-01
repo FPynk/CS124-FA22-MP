@@ -2,8 +2,8 @@ package edu.illinois.cs.cs124.ay2022.mp.models;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.Locale;
+//import java.util.regex.Pattern;
+//import java.util.Locale;
 
 /*
  * Model storing information about a place retrieved from the backend server.
@@ -48,7 +48,7 @@ public final class Place {
       desc = desc.replaceAll("[.!?,:;/]", " ");
       desc = " " + desc.replaceAll("[^a-zA-Z0-9 ]", "") + " ";
       if (desc.contains(search)) {
-        System.out.println(desc + "\n and the search is: " + search + "\n result is " + desc.contains(search));
+        //System.out.println(desc + "\n and the search is: " + search + "\n result is " + desc.contains(search));
         output.add(p);
       }
     }
