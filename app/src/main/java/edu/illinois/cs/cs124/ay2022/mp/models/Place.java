@@ -63,7 +63,7 @@ public final class Place {
   // Description of the place
   private String description;
 
-  public String getDescription() {
+  public String getDescription() { //fixed
     return description;
   }
 }
