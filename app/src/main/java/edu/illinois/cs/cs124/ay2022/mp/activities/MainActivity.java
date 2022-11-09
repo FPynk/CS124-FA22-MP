@@ -237,9 +237,9 @@ public final class MainActivity extends AppCompatActivity
     } else {
       updateShownPlaces(searchedPlaces);
     }
-    Log.d(TAG, "All places are: " + allPlaces);
-    Log.d(TAG, "Searched Places are: " + searchedPlaces);
-    Log.d(TAG, "No of Places are: " + searchedPlaces.size());
+//    Log.d(TAG, "All places are: " + allPlaces);
+//    Log.d(TAG, "Searched Places are: " + searchedPlaces);
+//    Log.d(TAG, "No of Places are: " + searchedPlaces.size());
     return true;
   }
 }

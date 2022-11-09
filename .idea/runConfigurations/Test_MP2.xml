@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test MP1" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Test MP2" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -12,7 +12,7 @@
         <list>
           <option value=":app:testDebugUnitTest" />
           <option value="--tests" />
-          <option value="&quot;edu.illinois.cs.cs124.ay2022.mp.MP1Test&quot;" />
+          <option value="&quot;edu.illinois.cs.cs124.ay2022.mp.MP2Test&quot;" />
         </list>
       </option>
       <option name="vmOptions" />
