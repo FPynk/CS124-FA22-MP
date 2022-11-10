@@ -68,13 +68,13 @@ public final class Place {
   }
 
   // Latitude and longitude of the place
-  private double latitude;
+  private double latitude = -999;
 
   public double getLatitude() {
     return latitude;
   }
 
-  private double longitude;
+  private double longitude = -999;
 
   public double getLongitude() {
     return longitude;

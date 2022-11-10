@@ -1,6 +1,7 @@
 package edu.illinois.cs.cs124.ay2022.mp.network;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.UUID;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -67,7 +69,56 @@ public final class Server extends Dispatcher {
         .setHeader("Content-Type", "application/json; charset=utf-8");
   }
 
-  /*
+  private MockResponse postFavoritePlace(final RecordedRequest request) {
+    // System.out.println(request.getBody().readUtf8()); // Can only call request.getBody().readUtf8() once
+    // On failure, return a 400 bad Request, catch throw
+    // Deserialize POST body to Place object using OBJECT_MAPPER
+    try {
+      // Take some care with lat and lon, set it to some invalid value before JSON edits it
+      // then check if JSON has edited it correctly
+      Place place = OBJECT_MAPPER.readValue(request.getBody().readUtf8(), new TypeReference<>() {});
+      // Check the resulting Place object to make sure its valid: id name desc present and not empty
+      // Check fields for empty or null
+      if (place.getId() == null || place.getId().length() != 36
+          || place.getName() == null || place.getName().length() == 0
+          || place.getDescription() == null || place.getDescription().length() == 0
+          || Math.abs(place.getLatitude()) > 90.0 || Math.abs(place.getLongitude()) > 180.0
+          ) {
+        throw new IllegalArgumentException();
+      }
+
+      // Checks if ID exists
+      // Case 1: new ID, Add it
+      // Case 2: existing ID, replace it
+      boolean sameId = false;
+      int pos = 0;
+      for (Place p : places) {
+        if (p.getId().equals(place.getId())) {
+          sameId = true;
+          pos = places.indexOf(p);
+        }
+      }
+      if (sameId) {
+        places.set(pos, place);
+      } else {
+        places.add(place);
+      }
+    } catch (Exception e) {
+      //Place holder thing
+      //System.out.println(e);
+      return new MockResponse()
+          .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+          .setHeader("Content-Type", "application/json; charset=utf-8");
+    }
+    // Take some care with lat and lon, set it to some invalid value before JSON edits it
+    // then check if JSON has edited it correctly
+    // Check fields for empty or null
+    return new MockResponse()
+        // Indicate that the request succeeded (HTTP 200 OK)
+        .setResponseCode(HttpURLConnection.HTTP_OK)
+        .setHeader("Content-Type", "application/json; charset=utf-8");
+  }
+    /*
    * Server request dispatcher.
    * Responsible for parsing the HTTP request and determining how to respond.
    * You will need to understand this code and augment it starting with MP2.
@@ -91,6 +142,8 @@ public final class Server extends Dispatcher {
       // Normalize the request method by converting to uppercase
       String method = request.getMethod().toUpperCase();
 
+      System.out.println(path + " " + method);
+
       // Main route dispatch tree, dispatching routes based on request path and type
       if (path.equals("") && method.equals("GET")) {
         // This route is used by the client during startup, so don't remove
@@ -102,6 +155,8 @@ public final class Server extends Dispatcher {
       } else if (path.equals("/places") && method.equals("GET")) {
         // Return the JSON list of restaurants for a GET request to the path /restaurants
         return getPlaces();
+      } else if (path.equals("/favoriteplace") && method.equals("POST")) {
+        return postFavoritePlace(request);
       }
 
       // If the route didn't match above, then we return a 404 NOT FOUND
