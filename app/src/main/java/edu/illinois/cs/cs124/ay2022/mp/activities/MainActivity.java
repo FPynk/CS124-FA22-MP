@@ -258,8 +258,8 @@ public final class MainActivity extends AppCompatActivity
   public boolean longPressHelper(final GeoPoint p) {
     Log.d(TAG, "Long Press");
     Intent launchAddFavouritePlace = new Intent(this, AddPlaceActivity.class);
-    launchAddFavouritePlace.putExtra("Latitude", Double.toString(p.getLatitude()));
-    launchAddFavouritePlace.putExtra("Longitude", Double.toString(p.getLongitude()));
+    launchAddFavouritePlace.putExtra("latitude", Double.toString(p.getLatitude()));
+    launchAddFavouritePlace.putExtra("longitude", Double.toString(p.getLongitude()));
     //System.out.println(launchAddFavouritePlace.getExtras());
     startActivity(launchAddFavouritePlace);
     return false;
