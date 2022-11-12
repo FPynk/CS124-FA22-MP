@@ -16,7 +16,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.NotImplementedException;
 import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication;
 import edu.illinois.cs.cs124.ay2022.mp.models.Place;
 import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow;
@@ -25,6 +24,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -95,8 +95,54 @@ public final class Client {
   }
 
   public void postFavoritePlace(final Place place, final Consumer<ResultMightThrow<Boolean>> callback) {
-    //TO DO MP2
-    throw new NotImplementedException();
+    StringRequest postFavouritePlaceRequest =
+        new StringRequest(
+            Request.Method.POST,
+            FavoritePlacesApplication.SERVER_URL + "/favoriteplace/",
+            response -> {
+              // This code runs on success
+              try {
+                /*
+                 * Deserialize the String into a List<Restaurant> using Jackson.
+                 * The TypeReference<>() {} is a bit of magic required to have Jackson
+                 * return a List with the correct type.
+                 * We wrap this in a try-catch to handle deserialization errors that may occur.
+                 */
+                //Change to serialise instead of deserialize
+                String postJSON = OBJECT_MAPPER.writeValueAsString(place);
+                // Pass the List<Place> to the callback
+                callback.accept(new ResultMightThrow(true));
+              } catch (JsonProcessingException error) {
+                // Pass the Exception to the callback on error
+                callback.accept(new ResultMightThrow<>(error));
+              }
+            },
+            error -> {
+              // This code runs on failure
+              // Pass the Exception to the callback on error
+              callback.accept(new ResultMightThrow<>(error));
+            }) {
+          @Override
+          public byte[] getBody() {
+            String postJSON;
+            try {
+              postJSON = OBJECT_MAPPER.writeValueAsString(place);
+            } catch (JsonProcessingException error) {
+              throw new IllegalStateException();
+            }
+            return postJSON.getBytes(StandardCharsets.UTF_8);
+            //takes string bytes and coverts to bytes using UTF 8 standard
+            // Pass place string body here
+          }
+
+          @Override
+          public String getBodyContentType() {
+            return "application/json; charset=utf-8";
+          }
+        };
+    // Actually queue the request
+    // The callbacks above will be run once it completes
+    requestQueue.add(postFavouritePlaceRequest);
   }
   /*
    * You do not need to modify the code below.
