@@ -25,9 +25,7 @@ public class AddPlaceActivity extends AppCompatActivity {
     returnToMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
     Button cancelButton = findViewById(R.id.cancel_button);
-    cancelButton.setOnClickListener(v -> {
-      startActivity(returnToMain);
-    });
+    cancelButton.setOnClickListener(v -> startActivity(returnToMain));
 
     //Accesses description
     EditText descText = findViewById(R.id.description);
