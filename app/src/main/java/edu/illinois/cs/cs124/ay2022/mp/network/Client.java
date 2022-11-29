@@ -102,12 +102,6 @@ public final class Client {
             response -> {
               // This code runs on success
               try {
-                /*
-                 * Deserialize the String into a List<Restaurant> using Jackson.
-                 * The TypeReference<>() {} is a bit of magic required to have Jackson
-                 * return a List with the correct type.
-                 * We wrap this in a try-catch to handle deserialization errors that may occur.
-                 */
                 //Change to serialise instead of deserialize
                 String postJSON = OBJECT_MAPPER.writeValueAsString(place);
                 // Pass the List<Place> to the callback
