@@ -2,6 +2,7 @@ package edu.illinois.cs.cs124.ay2022.mp.network;
 
 import android.os.Build;
 import android.util.Log;
+
 import com.android.volley.Cache;
 import com.android.volley.ExecutorDelivery;
 import com.android.volley.Network;
@@ -17,8 +18,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
-import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.ResultMightThrow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -81,6 +82,8 @@ public final class Client {
               } catch (JsonProcessingException error) {
                 // Pass the Exception to the callback on error
                 callback.accept(new ResultMightThrow<>(error));
+
+
               }
             },
             error -> {
@@ -136,8 +139,58 @@ public final class Client {
         };
     // Actually queue the request
     // The callbacks above will be run once it completes
+    Log.d("postPlace", "postPlaceActivity.java request added to queue: " + postFavouritePlaceRequest);
     requestQueue.add(postFavouritePlaceRequest);
   }
+
+  //DELETE
+  public void deleteFavoritePlace(final Place place, final Consumer<ResultMightThrow<Boolean>> callback) {
+    Log.d("deleteTest", place.getName());
+    StringRequest deleteFavouritePlaceRequest =
+        new StringRequest(
+            Request.Method.POST,
+            FavoritePlacesApplication.SERVER_URL + "/deleteplace/",
+            response -> {
+              // This code runs on success
+              try {
+                //Change to serialise instead of deserialize
+                String postJSON = OBJECT_MAPPER.writeValueAsString(place);
+                // Pass the List<Place> to the callback
+                callback.accept(new ResultMightThrow(true));
+              } catch (JsonProcessingException error) {
+                // Pass the Exception to the callback on error
+                callback.accept(new ResultMightThrow<>(error));
+              }
+            },
+            error -> {
+              // This code runs on failure
+              // Pass the Exception to the callback on error
+              callback.accept(new ResultMightThrow<>(error));
+            }) {
+          @Override
+          public byte[] getBody() {
+            String postJSON;
+            try {
+              postJSON = OBJECT_MAPPER.writeValueAsString(place);
+            } catch (JsonProcessingException error) {
+              throw new IllegalStateException();
+            }
+            return postJSON.getBytes(StandardCharsets.UTF_8);
+            //takes string bytes and coverts to bytes using UTF 8 standard
+            // Pass place string body here
+          }
+
+          @Override
+          public String getBodyContentType() {
+            return "application/json; charset=utf-8";
+          }
+        };
+    // Actually queue the request
+    // The callbacks above will be run once it completes
+    Log.d("DeleteTest", "DeletePlaceActivity.java request added to queue: " + deleteFavouritePlaceRequest);
+    requestQueue.add(deleteFavouritePlaceRequest);
+  }
+
   /*
    * You do not need to modify the code below.
    * However, you may want to understand how it works.

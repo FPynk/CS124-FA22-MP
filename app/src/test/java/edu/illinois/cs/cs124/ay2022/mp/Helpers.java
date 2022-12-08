@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import edu.illinois.cs.cs124.ay2022.mp.activities.MainActivity;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
 import edu.illinois.cs.cs124.ay2022.mp.network.Server;
 import java.io.StringReader;
 import java.math.BigInteger;

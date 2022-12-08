@@ -1,4 +1,4 @@
-package edu.illinois.cs.cs124.ay2022.mp.models;
+package edu.illinois.cs.cs124.ay2022.mp.network.models;
 
 /*
  * Class allowing us to return both a result and an exception from a method that might throw.

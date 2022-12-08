@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.CompletableFuture;
 import edu.illinois.cs.cs124.ay2022.mp.R;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
-import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.ResultMightThrow;
 import edu.illinois.cs.cs124.ay2022.mp.network.Client;
 
 public class AddPlaceActivity extends AppCompatActivity {

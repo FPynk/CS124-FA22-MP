@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
 import edu.illinois.cs.cs124.ay2022.mp.network.Client;
 import edu.illinois.cs.cs124.ay2022.mp.network.Server;
 import edu.illinois.cs.cs125.gradlegrader.annotations.Graded;

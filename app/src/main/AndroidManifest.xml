@@ -26,5 +26,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AddPlaceActivity" />
+        <activity android:name=".activities.DeletePlaceActivity" />
     </application>
 </manifest>

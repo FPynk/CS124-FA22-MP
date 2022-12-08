@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import edu.illinois.cs.cs124.ay2022.mp.R;
 import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
-import edu.illinois.cs.cs124.ay2022.mp.models.ResultMightThrow;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.ResultMightThrow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -256,12 +256,34 @@ public final class MainActivity extends AppCompatActivity
 
   @Override
   public boolean longPressHelper(final GeoPoint p) {
-    Log.d(TAG, "Long Press");
-    Intent launchAddFavouritePlace = new Intent(this, AddPlaceActivity.class);
-    launchAddFavouritePlace.putExtra("latitude", Double.toString(p.getLatitude()));
-    launchAddFavouritePlace.putExtra("longitude", Double.toString(p.getLongitude()));
-    //System.out.println(launchAddFavouritePlace.getExtras());
-    startActivity(launchAddFavouritePlace);
+    //check existing location is here
+    boolean delete = false;
+    for (int i = 0; i < allPlaces.size(); i++) {
+      Place loc = allPlaces.get(i);
+      if (Math.abs(loc.getLongitude() - p.getLongitude()) < 0.0002
+          && Math.abs(loc.getLatitude() - p.getLatitude()) < 0.0002
+          && !delete) {
+        Intent launchDeleteFavouritePlace = new Intent(this, DeletePlaceActivity.class);
+        launchDeleteFavouritePlace.putExtra("id", loc.getId());
+        launchDeleteFavouritePlace.putExtra("name", loc.getName());
+        launchDeleteFavouritePlace.putExtra("desc", loc.getDescription());
+        launchDeleteFavouritePlace.putExtra("lat", Double.toString(loc.getLatitude()));
+        launchDeleteFavouritePlace.putExtra("lon", Double.toString(loc.getLongitude()));
+        Log.d("DeleteTest", "Long Press is close to marker");
+        startActivity(launchDeleteFavouritePlace);
+        delete = true;
+      }
+    }
+    //if not, open delete page
+    if (!delete) {
+      Log.d(TAG, "Long Press");
+      Intent launchAddFavouritePlace = new Intent(this, AddPlaceActivity.class);
+      launchAddFavouritePlace.putExtra("latitude", Double.toString(p.getLatitude()));
+      launchAddFavouritePlace.putExtra("longitude", Double.toString(p.getLongitude()));
+      //System.out.println(launchAddFavouritePlace.getExtras());
+      startActivity(launchAddFavouritePlace);
+    }
     return false;
   }
+
 }

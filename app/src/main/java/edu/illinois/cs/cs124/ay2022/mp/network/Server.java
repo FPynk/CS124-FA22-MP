@@ -1,5 +1,6 @@
 package edu.illinois.cs.cs124.ay2022.mp.network;
 
+import android.util.Log;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -7,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import edu.illinois.cs.cs124.ay2022.mp.application.FavoritePlacesApplication;
-import edu.illinois.cs.cs124.ay2022.mp.models.Place;
+import edu.illinois.cs.cs124.ay2022.mp.network.models.Place;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -117,6 +118,53 @@ public final class Server extends Dispatcher {
         .setResponseCode(HttpURLConnection.HTTP_OK)
         .setHeader("Content-Type", "application/json; charset=utf-8");
   }
+
+  //Delete
+  private MockResponse deleteFavoritePlace(final RecordedRequest request) {
+    // System.out.println(request.getBody().readUtf8()); // Can only call request.getBody().readUtf8() once
+    // On failure, return a 400 bad Request, catch throw
+    // Deserialize POST body to Place object using OBJECT_MAPPER
+    Log.d("DeleteTest", "in deleteFavoritePlace");
+    try {
+      Place place = OBJECT_MAPPER.readValue(request.getBody().readUtf8(), new TypeReference<>() {});
+      //Place place = OBJECT_MAPPER.readValue(new String(request.getBody().
+      // readByteArray(), StandardCharsets.UTF_8), new TypeReference<>() {});
+
+      Log.d("DeleteTest", "delete request read successfully");
+      Log.d("DeleteTest", "delete request details: Name " + place.getName() + " Id " + place.getId() + " Desc "
+          + place.getDescription() + " Lat " + place.getLatitude() + " Lon " + place.getLongitude());
+
+      // Check the resulting Place object to make sure its valid: id name desc present and not empty
+      // Check fields for empty or null
+      if (place.getId() == null || place.getId().length() != 36
+          || place.getName() == null || place.getName().length() == 0
+          || place.getDescription() == null || place.getDescription().length() == 0
+          || Math.abs(place.getLatitude()) > 90.0 || Math.abs(place.getLongitude()) > 180.0
+      ) {
+        throw new IllegalArgumentException();
+      }
+
+      // Find index of place in database and then delete it
+      for (Place p : places) {
+        if (p.getId().equals(place.getId())) {
+          places.remove(p);
+          Log.d("DeleteTest", "deleted place with id " + p.getId());
+          break;
+        }
+      }
+
+
+    } catch (Exception e) {
+      Log.d("DeleteTest", "delete request failed: " + e.getMessage());
+      return new MockResponse()
+          .setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+          .setHeader("Content-Type", "application/json; charset=utf-8");
+    }
+    return new MockResponse()
+        // Indicate that the request succeeded (HTTP 200 OK)
+        .setResponseCode(HttpURLConnection.HTTP_OK)
+        .setHeader("Content-Type", "application/json; charset=utf-8");
+  }
     /*
    * Server request dispatcher.
    * Responsible for parsing the HTTP request and determining how to respond.
@@ -156,6 +204,9 @@ public final class Server extends Dispatcher {
         return getPlaces();
       } else if (path.equals("/favoriteplace") && method.equals("POST")) {
         return postFavoritePlace(request);
+      } else if (path.equals("/deleteplace") && method.equals("POST")) {
+        Log.d("DeleteTest", "DeletePlaceActivity.java request registered by server");
+        return deleteFavoritePlace(request);
       }
 
       // If the route didn't match above, then we return a 404 NOT FOUND
